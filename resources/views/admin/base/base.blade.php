@@ -112,7 +112,7 @@
 				</li>
 				<li @if($active == 'comment')class="active"@endif>
 					<a href="/admin/comments">
-						<i class="flaticon-time-1"></i>
+						<i class="flaticon-like-1"></i>
 						<p>مدیریت نظرات</p>
 					</a>
 				</li>

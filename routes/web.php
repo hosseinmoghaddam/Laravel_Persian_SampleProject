@@ -12,8 +12,8 @@
 
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth_admin'], function () {
-    Route::get('comments', 'Admin\CommentController@get');
-    Route::post('comments/post', 'Admin\CommentController@post');
+    Route::get('comments', 'Admin\CommentController@get')->name('comments');
+    Route::post('comments/post', 'Admin\CommentController@post')->name("search");
     Route::delete('/comments/{comment}', ['uses' => 'Admin\CommentController@destroy', 'as' => 'admin.comment.destroy']);
     Route::get('home', 'Admin\AdminController@get');
     Route::get('news/list/{page_num}', 'Admin\NewsController@get');

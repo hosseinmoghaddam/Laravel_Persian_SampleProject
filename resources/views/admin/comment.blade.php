@@ -22,16 +22,27 @@
                 <div class="card-content">
                     <div class="col-md-10 col-md-offset-1 col-xs-12">
                         <div class="row">
-                            <div class="colxs-12 col-md-2 pull-right">
+                            <div class="colxs-2 col-md-2 pull-right">
                                 <label>جستجو :</label>
                             </div>
-                            <div class="col-xs-12 col-md-10 pull-right">
+                            <div class="col-xs-6 col-md-6 pull-right">
                                 <input id="myInput" onkeyup="myFunction()" name="search_news" class="form-control">
                             </div>
+                            <div class="col-xs-2 col-md-2 pull-right">
+                                <a href="#">
+                                    <input type="button"  onclick="searchPost()" class="btn btn-primary pull-right" value="بگرد">
+                                </a>
+                            </div>
+                            <div class="col-xs-2 col-md-2 pull-right">
+                                <a href="{{route('comments')}}">
+                                    <input type="button"  class="btn btn-danger" value="بی خیال">
+                                </a>
+                            </div>
+
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                @if($comments == false)
+                                @if($comments == null)
                                     <div class="row">
                                         <div class="col-xs-12 col-md-6 pull-right">
                                             <div class="alert alert-info alert-with-icon" data-notify="container">
@@ -53,7 +64,7 @@
                                                 <th class="col-xs-1 text-right">عملیات</th>
                                             </tr>
                                             </thead>
-                                            <tbody data-content="content_table">
+                                            <tbody data-content="content_table" data-title="search">
                                             @foreach($comments as $comment)
                                                 <tr data-status="" data-id="{{$comment->id}}">
                                                     <td>{{ $loop->iteration }}</td>
@@ -139,6 +150,67 @@
                 title: 'توجه',
                 body: 'آیا برای حذف مطمئن هستید؟',
                 buttons: btn
+            });
+        }
+
+        function searchPost() {
+            var input = document.getElementById("myInput");
+            var table = document.getElementById("myTable");
+         //   var tr = table.getElementsByTagName("tr");
+            alert(input.value)
+            $.ajax({
+                url: 'http://localhost:8000/admin/comments/post',
+                method: 'POST',
+                data:  { search: input.value , location: "Boston" },
+                async: true,
+                cache: false,
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-CSRF-TOKEN", $('meta[name="csrf-token"]').attr('content'));
+                },
+
+                success: function (data) {
+                    var html_string = '';
+                    if (data.status) {
+                        if (data.comments.length>0)
+                        {
+                            html_string += '<tbody data-title="search">';
+                            for (var i = 0; i < data.comments.length; i++) {
+                                html_string += '<tr data-status="" data-id="'+ data.comments[i].id+'">';
+                                var counter = i + 1;
+                                html_string += '<td>' + counter+ '</td>';
+                                html_string +='<td class="" data-id="'+data.comments[i].id+'">' + data.comments[i].name+ '</td>';
+                                html_string += '<td class="">' + data.comments[i].email + '</td>';
+                                html_string += '<td class="">' + data.comments[i].subject + '</td>';
+                                html_string += '<td class="">' + data.comments[i].message + '</td>';
+                                html_string += '<td class="actional">';
+                                html_string += '<span data-id="'+ data.comments[i].id+'" data-title="delete_comments" onclick="confirmDelete(\'http://localhost:8000/admin/comments/'+data.comments[i].id+'\',\''+data.comments[i].id+'\')"';
+                                html_string += 'class="flaticon-trash-2 delete_news_button"';
+                                html_string += 'data-toggle="tooltip" title="حذف"></span>';
+                                html_string += '</td>';
+                                html_string += '</tr>';
+                            }
+                            html_string += '</tbody>';
+
+                            $('tbody[data-title="search"]').remove();
+                            $('table[class="table"]').append(html_string);
+                            $('div[class="text-center"]').remove();
+                        }
+                        else {
+                            html_string += '<tbody data-title="search">';
+                            html_string += '<td> هیچ موردی یافت نشد.</td>';
+                            html_string += '</tbody>';
+                            $('tbody[data-title="search"]').remove();
+                            $('table[class="table"]').append(html_string);
+                            $('div[class="text-center"]').remove();
+                        }
+
+                    } else {
+                       alert(data.status)
+                    }
+                },
+                error: function (request, msg, error) {
+                   alert(request)
+                }
             });
         }
 
