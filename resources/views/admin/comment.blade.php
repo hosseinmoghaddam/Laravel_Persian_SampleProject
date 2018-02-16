@@ -3,7 +3,7 @@
     مدیریت نظرات
 @endsection
 @section('css')
-    <link rel="stylesheet" href="/css/loader.css"/>
+
     <script src="{{asset('dist/js/pagination.js')}}" type="text/javascript"></script>
 @endsection
 @section('header')

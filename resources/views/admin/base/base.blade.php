@@ -16,6 +16,7 @@
 
 	@yield('meta')
 	<!-- Bootstrap core CSS     -->
+	<link rel="stylesheet" href="/css/loader.css"/>
 	<link href="{{ asset('dist/css/bootstrap.min.css') }}" rel="stylesheet" />
 	<link href="{{ asset('dist/css/common.css') }}" rel="stylesheet" />
 	<link href="{{asset('dist/css/font-awesome.min.css')}}" rel="stylesheet">
